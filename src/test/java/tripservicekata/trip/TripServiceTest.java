@@ -20,7 +20,7 @@ public class TripServiceTest {
     private static final Trip TO_BRAZIL = new Trip();
     private static final Trip TO_LONDON = new Trip();
     private User loggedInUser;
-    private org.craftedsw.tripservicekata.trip.TripService tripService;
+    private TripService tripService;
 
     @Before
     public void initialise(){
@@ -60,7 +60,7 @@ public class TripServiceTest {
         assertThat(friendTrips.size(), is(2));
     }
 
-    private class TestableTripService extends org.craftedsw.tripservicekata.trip.TripService {
+    private class TestableTripService extends TripService {
         @Override
         protected User getLoggedInUser(){
             return loggedInUser;
