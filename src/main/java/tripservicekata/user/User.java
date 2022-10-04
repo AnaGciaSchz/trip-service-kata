@@ -2,7 +2,7 @@ package tripservicekata.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.craftedsw.tripservicekata.trip.Trip;
+import tripservicekata.trip.Trip;
 
 public class User {
 
