@@ -17,12 +17,14 @@ public class TripServiceTest {
     private static final User REGISTERED_USER = new User();
     private static final User ANOTHER_USER = new User();
     private static final Trip TO_BRAZIL = new Trip();
+    private static final Trip TO_LONDON = new Trip();
     private User loggedInUser;
     private org.craftedsw.tripservicekata.trip.TripService tripService;
 
     @Before
     public void initialise(){
         tripService = new TestableTripServie();
+        loggedInUser = REGISTERED_USER;
     }
 
     @Test(expected = UserNotLoggedInException.class) public void
@@ -35,8 +37,6 @@ public class TripServiceTest {
     @Test
     public void
     should_not_return_any_trips_when_users_are_not_friends(){
-        loggedInUser = REGISTERED_USER;
-
         User friend = new User();
         friend.addFriend(ANOTHER_USER);
         friend.addTrip(TO_BRAZIL);
@@ -46,10 +46,28 @@ public class TripServiceTest {
         assertThat(friendTrips.size(), is(0));
     }
 
+    @Test public void
+    should_return_friend_trips_when_users_are_friends(){
+        User friend = new User();
+        friend.addFriend(ANOTHER_USER);
+        friend.addFriend(loggedInUser);
+        friend.addTrip(TO_BRAZIL);
+        friend.addTrip(TO_LONDON);
+
+        List<Trip> friendTrips = tripService.getTripsByUser(friend);
+
+        assertThat(friendTrips.size(), is(2));
+    }
+
     private class TestableTripServie extends org.craftedsw.tripservicekata.trip.TripService {
         @Override
         protected User getLoggedInUser(){
             return loggedInUser;
+        }
+
+        @Override
+        protected List<Trip> tripsBy(User user) {
+            return user.trips();
         }
 
     }
