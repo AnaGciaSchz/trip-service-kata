@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import tripservicekata.exception.UserNotLoggedInException;
 import tripservicekata.user.User;
+import tripservicekata.user.UserBuilder;
 
 public class TripServiceTest {
 
@@ -23,7 +24,7 @@ public class TripServiceTest {
 
     @Before
     public void initialise(){
-        tripService = new TestableTripServie();
+        tripService = new TestableTripService();
         loggedInUser = REGISTERED_USER;
     }
 
@@ -37,9 +38,10 @@ public class TripServiceTest {
     @Test
     public void
     should_not_return_any_trips_when_users_are_not_friends(){
-        User friend = new User();
-        friend.addFriend(ANOTHER_USER);
-        friend.addTrip(TO_BRAZIL);
+        User friend = UserBuilder.aUser()
+            .friendsWith(ANOTHER_USER)
+            .withTrips(TO_BRAZIL)
+            .build();
 
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
@@ -48,18 +50,17 @@ public class TripServiceTest {
 
     @Test public void
     should_return_friend_trips_when_users_are_friends(){
-        User friend = new User();
-        friend.addFriend(ANOTHER_USER);
-        friend.addFriend(loggedInUser);
-        friend.addTrip(TO_BRAZIL);
-        friend.addTrip(TO_LONDON);
+        User friend = UserBuilder.aUser()
+            .friendsWith(ANOTHER_USER, loggedInUser)
+            .withTrips(TO_BRAZIL, TO_LONDON)
+            .build();
 
         List<Trip> friendTrips = tripService.getTripsByUser(friend);
 
         assertThat(friendTrips.size(), is(2));
     }
 
-    private class TestableTripServie extends org.craftedsw.tripservicekata.trip.TripService {
+    private class TestableTripService extends org.craftedsw.tripservicekata.trip.TripService {
         @Override
         protected User getLoggedInUser(){
             return loggedInUser;
