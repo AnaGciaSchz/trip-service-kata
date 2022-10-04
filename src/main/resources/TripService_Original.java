@@ -1,3 +1,5 @@
+
+/**
 package org.craftedsw.tripservicekata;
 
 import java.util.ArrayList;
@@ -32,3 +34,4 @@ public class TripService_Original {
 	}
 	
 }
+ */
